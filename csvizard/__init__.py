@@ -2,7 +2,7 @@
 App to work with CSV files
 """
 
-# app/__init__.py
+# csvizard/__init__.py
 
 from rich.console import Console
 

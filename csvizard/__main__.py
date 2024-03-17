@@ -2,9 +2,9 @@
 App Entry-point
 """
 
-# app/__main__.py
+# csvizard/__main__.py
 
-from csvizard import cli, __app_name__, console
+from csvizard import __app_name__, console
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.tree import Tree
@@ -98,7 +98,7 @@ def main():
         main()
       
       join_csv([csv_paths[i] for i in file_idxs]) # create this fn
-    
+
     case 3 :
       opr_choices = ["sum", "avg", "min", "max"]
       show_files()
@@ -113,7 +113,7 @@ def main():
       file_idx = Prompt.ask("Select file", choices=[str(i) for i in range(len(csv_paths))], default=0) if len(csv_paths) > 1 else 0
       file_idx = int(file_idx)
       console.print(csv_paths[file_idx])
-    
+
 if __name__ == "__main__":
   typer.run(main)
 
