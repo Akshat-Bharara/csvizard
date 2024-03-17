@@ -3,4 +3,5 @@
 /csvizard/test.csv
 
 .vscode
-*.csv
+/*.csv
+/csvizard/*.csv

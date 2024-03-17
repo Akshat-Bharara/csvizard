@@ -6,7 +6,7 @@ App to work with CSV files
 
 from rich.console import Console
 
-__app_name__ = "csvizard"
+__app_name__ = "CSVizard"
 __version__ = "0.1.0"
 
 console = Console()
