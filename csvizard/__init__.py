@@ -21,4 +21,3 @@ ERRORS = {
   PATH_ERROR : "something is wrong with the file path",
   UNKNOWN_ERROR : "some unknown error occured"
 }
-

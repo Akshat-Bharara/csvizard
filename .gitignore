@@ -1,5 +1,4 @@
 /.env
-/requirements.txt
 /csvizard/__pycache__
 
 .vscode
