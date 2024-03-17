@@ -89,13 +89,18 @@ def main():
       console.print(get_csv_cols(csv_paths[file_idx]))
       cond = Prompt.ask("Query [pink]\[(col [=|!=|>|<|>=|<=] value [&||| ])*\]")
 
-      df = filter_csv(csv_paths[file_idx], cond)
-      console.print(df.head())
-      gen_ch = Confirm.ask("Generate CSV ?")
-
-      if gen_ch :
-        gen_csv(df)
-        console.log(f"[green]Generated successfully!")
+      try :
+        df = filter_csv(csv_paths[file_idx], cond)
+        console.print(df.head())
+        gen_ch = Confirm.ask("Generate CSV ?")
+        
+        if gen_ch :
+          gen_csv(df)
+          console.print(f"[green]Generated successfully!")
+      except :
+        console.print("[red]Invalid condition")
+        Prompt.ask("Press any key to go back")
+        return main()
       
       Prompt.ask("Press any key to go back")
       main()
@@ -184,7 +189,10 @@ def main():
       file_idx = Prompt.ask("Select file", choices=[str(i) for i in range(len(csv_paths))], default=0) if len(csv_paths) > 1 else 0
       file_path = csv_paths[int(file_idx)]
       df = pd.read_csv(file_path)
-      console.print(df)
+
+      with console.pager() :
+        console.print(df)
+      
       Prompt.ask("Press any key to go back")
       main()
     
