@@ -144,7 +144,7 @@ def main():
     case 3 :
       opr_choices = ["sum", "avg", "min", "max"]
       show_files()
-      file_idx = Prompt.ask("Select file", choices=[str(i) for i in range(len(csv_paths))], default=0) if len(csv_paths) > 1 else 0
+      file_idx = Prompt.ask("Select file", choices=[int(i) for i in range(len(csv_paths))], default=0) if len(csv_paths) > 1 else 0
       file_path = csv_paths[file_idx]
       cols = get_csv_cols(file_path)
       opr = Prompt.ask("Select operation", choices=opr_choices)
