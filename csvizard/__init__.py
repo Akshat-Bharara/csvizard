@@ -4,8 +4,12 @@ App to work with CSV files
 
 # app/__init__.py
 
+from rich.console import Console
+
 __app_name__ = "csvizard"
 __version__ = "0.1.0"
+
+console = Console()
 
 (
 SUCCESS,
