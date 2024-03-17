@@ -1,4 +1,5 @@
 /.env
 /csvizard/__pycache__
+/csvizard/test.csv
 
 .vscode

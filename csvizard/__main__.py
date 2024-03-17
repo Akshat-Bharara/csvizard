@@ -6,7 +6,7 @@ App Entry-point
 
 from csvizard import __app_name__, console
 from rich.panel import Panel
-from rich.prompt import Prompt
+from rich.prompt import Prompt, Confirm
 from rich.tree import Tree
 from rich.console import Console
 import typer
@@ -28,9 +28,9 @@ def prompt_files() :
 def add_files(paths) :
   for path in [*paths] :
     if Path(path).exists() :
-      # if not i.endswith(".csv") :
-      #   console.print(f"[red][bold]{i}[/] not a CSV file")
-      #   continue
+      if not path.endswith(".csv") :
+        console.print(f"[red][bold]{path}[/] not a CSV file")
+        continue
 
       if path in csv_paths :
         console.print(f"[blue]{path} already added")
@@ -57,6 +57,12 @@ def show_files() :
     display_name = name + (f" [white]({path.parent})" if len([*filter(lambda path : Path(path).name == name, csv_paths)]) > 1 else "")
     console.print(f"{i} [blue]{display_name}[/]")
 
+def gen_csv(df) :
+  filename = "out.csv"
+  delim = Prompt.ask("Delimiter", choices=[",", "|", ":"], default=",")
+  filename = Prompt.ask("File name", default="out.csv")
+  df.to_csv(filename, sep=delim,index=False)
+
 def main():
   console.clear()
   print_title()
@@ -75,8 +81,13 @@ def main():
       file_idx = Prompt.ask("Select file ", choices=[str(i) for i in range(len(csv_paths))], default=0) if len(csv_paths) > 1 else 0
       file_idx = int(file_idx)
       console.print(f"[green]{csv_paths[file_idx]}")
+      cond = Prompt.ask("Query [pink]\[(col [=|!=|>|<|>=|<=] value [&||| ])*\]")
 
-      filter_csv(csv_paths[file_idx]) # create this fn
+      df = filter_csv(csv_paths[file_idx], cond)
+      console.log(df.head())
+      gen_ch = Confirm.ask("Generate CSV ?")
+
+      if gen_ch : gen_csv(df)
       
     case 2 :      
       if (len(csv_paths) < 2) : 
@@ -97,16 +108,23 @@ def main():
         sleep(1)
         main()
       
-      join_csv([csv_paths[i] for i in file_idxs]) # create this fn
-
+      joint_df = join_csv(*[csv_paths[int(i)] for i in file_idxs])
+      console.print(joint_df)
+      ch_gen = Confirm.ask("Generate a CSV file ?")
+      
+      if ch_gen :
+        gen_csv(joint_df)
+      
     case 3 :
       opr_choices = ["sum", "avg", "min", "max"]
       show_files()
       file_idx = Prompt.ask("Select file", choices=[str(i) for i in range(len(csv_paths))], default=0) if len(csv_paths) > 1 else 0
-      selected_col = 0 # after creating show_cols fn
+      file_path = csv_paths[file_idx]
+      cols = get_csv_cols(file_path)
       opr = Prompt.ask("Select operation", choices=opr_choices)
-
-      console.print(opr)
+      col = Prompt.ask("Select column", choices=cols)
+      result = aggregate_csv(file_path, col, opr)
+      console.print(result)
 
     case 4 :
       show_files()
